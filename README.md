@@ -1,73 +1,182 @@
-📊 Analisis Data & Credit Scoring: Prediksi Risiko Gagal Bayar (Home Credit)
+# 📊 Home Credit Default Risk Prediction
 
-Repositori ini berisi Jupyter Notebook (.ipynb) yang mendokumentasikan proses analisis end-to-end dalam membangun model Machine Learning untuk memprediksi risiko gagal bayar (default risk). Studi kasus ini menggunakan dataset Home Credit, sebuah institusi finansial internasional yang berfokus pada penyediaan pinjaman bagi populasi unbanked (mereka yang memiliki sedikit atau tanpa riwayat kredit tradisional).
+**End-to-End Data Analysis & Machine Learning | Credit Scoring**
 
-Notebook ini tidak hanya berfokus pada pencapaian metrik akurasi algoritma, tetapi juga pada eksplorasi data yang mendalam, penanganan anomali dunia nyata, dan ekstraksi insight bisnis yang dapat ditindaklanjuti oleh manajemen risiko.
+## 📌 Project Overview
 
-📑 Alur Analisis di dalam Notebook
+Proyek ini bertujuan untuk menganalisis karakteristik nasabah dan membangun model *Machine Learning* untuk memprediksi risiko gagal bayar (*default risk*) pada pengajuan pinjaman menggunakan dataset **Home Credit Default Risk**.
 
-Analisis di dalam notebook ini disusun secara berurutan dan sistematis, mencakup tahapan-tahapan berikut:
+Home Credit merupakan perusahaan pembiayaan yang berfokus pada perluasan akses kredit bagi masyarakat yang memiliki riwayat kredit terbatas atau belum memiliki riwayat kredit formal.
 
-1. Exploratory Data Analysis (EDA) & Business Insights
+Proyek ini mencakup proses analisis data secara end-to-end, mulai dari *Exploratory Data Analysis* (EDA), *data preprocessing*, *feature engineering*, pemodelan Machine Learning, hingga evaluasi model dan penyusunan rekomendasi bisnis.
 
-Fokus awal notebook adalah memahami karakteristik dari ratusan ribu nasabah dan mengidentifikasi pola tersembunyi yang berkorelasi dengan gagal bayar.
+Fokus utama proyek ini adalah memahami faktor-faktor yang berkaitan dengan risiko gagal bayar serta mengevaluasi potensi penggunaan model prediktif untuk mendukung pengambilan keputusan dalam manajemen risiko kredit.
 
-Analisis Imbalance Class Ekstrem: Memvisualisasikan distribusi target di mana kelas lancar (91.9%) sangat mendominasi dibandingkan kelas gagal bayar (8.1%). Hal ini menjadi landasan mengapa metrik akurasi tradisional tidak bisa digunakan.
+## 🎯 Project Objectives
 
-Korelasi Demografi & Risiko:
+- Mengidentifikasi pola dan karakteristik nasabah yang berkaitan dengan risiko gagal bayar.
+- Membersihkan data dan menangani anomali serta *missing values*.
+- Membuat fitur baru untuk merepresentasikan kemampuan finansial nasabah.
+- Mengembangkan dan mengevaluasi model klasifikasi untuk prediksi risiko kredit.
+- Mengidentifikasi fitur yang paling berpengaruh terhadap prediksi model.
+- Menerjemahkan hasil analisis menjadi rekomendasi yang relevan bagi bisnis.
 
-Usia: Nasabah muda (di bawah 25 tahun) memiliki risiko default hampir 2.3x lipat lebih besar dibandingkan nasabah senior (di atas 50 tahun).
+## 📂 Project Workflow
 
-Gender & Status Sosial: Nasabah perempuan secara statistik menunjukkan tingkat kepatuhan bayar yang sedikit lebih tinggi. Tingkat pendidikan yang lebih tinggi (seperti Higher Education) juga berkorelasi kuat dengan rendahnya risiko gagal bayar.
+### 1. Exploratory Data Analysis (EDA)
 
-Analisis Variabel Eksternal: Meneliti variabel EXT_SOURCE_1, EXT_SOURCE_2, dan EXT_SOURCE_3 (skor terenkripsi dari biro kredit eksternal) yang terbukti menjadi prediktor paling kuat secara global di seluruh dataset.
+Tahap ini dilakukan untuk memahami distribusi data, karakteristik nasabah, dan pola yang berkaitan dengan status pembayaran pinjaman.
 
-2. Data Preprocessing & Penanganan Anomali
+Analisis yang dilakukan meliputi:
 
-Data riil selalu kotor. Tahap ini menceritakan bagaimana notebook membersihkan data sebelum dimasukkan ke model:
+- **Target Distribution:** Mengidentifikasi ketidakseimbangan kelas (*class imbalance*) antara nasabah yang melakukan pembayaran tepat waktu dan nasabah yang mengalami gagal bayar.
+- **Demographic Analysis:** Mengeksplorasi hubungan antara usia, gender, tingkat pendidikan, dan karakteristik demografi lainnya dengan tingkat gagal bayar.
+- **External Credit Scores:** Menganalisis variabel `EXT_SOURCE_1`, `EXT_SOURCE_2`, dan `EXT_SOURCE_3` untuk memahami hubungannya dengan risiko kredit.
+- **Financial Characteristics:** Mengeksplorasi karakteristik pinjaman, pendapatan, cicilan, dan riwayat pekerjaan nasabah.
 
-Penanganan Outlier & Anomali: Mengidentifikasi dan memperbaiki anomali ekstrem, seperti nilai DAYS_EMPLOYED (lama bekerja) yang tercatat sebesar 365243 hari (sekitar 1000 tahun). Anomali ini ditangani dengan menggantinya menjadi NaN (kosong) dan membuat kolom penanda boolean (DAYS_EMPLOYED_ANOM).
+**Key Findings:**
 
-Imputasi Missing Values: Banyaknya data kosong pada variabel EXT_SOURCE ditangani secara hati-hati, karena kekosongan data itu sendiri bisa menjadi sinyal risiko (misal: nasabah tidak terdeteksi di biro kredit manapun).
+- Distribusi target menunjukkan bahwa sekitar 91,9% nasabah termasuk kelas pembayaran lancar dan 8,1% termasuk kelas gagal bayar.
+- Terdapat perbedaan tingkat gagal bayar pada beberapa kelompok demografi.
+- Variabel `EXT_SOURCE_1`, `EXT_SOURCE_2`, dan `EXT_SOURCE_3` menunjukkan hubungan yang kuat dengan target prediksi.
 
-Encoding Variabel Kategorikal: Menggunakan kombinasi One-Hot Encoding untuk variabel kategorikal dengan sedikit nilai unik, dan Label Encoding / Target Encoding untuk variabel dengan kardinalitas tinggi.
+Temuan tersebut digunakan sebagai dasar untuk menentukan strategi preprocessing, pemilihan fitur, dan evaluasi model.
 
-3. Feature Engineering (Rekayasa Fitur)
+### 2. Data Preprocessing
 
-Alih-alih hanya mengandalkan data mentah, notebook ini menyintesis variabel finansial baru yang lebih merepresentasikan kapasitas bayar nasabah secara logis:
+Tahap preprocessing dilakukan untuk meningkatkan kualitas data sebelum digunakan dalam pemodelan.
 
-Credit_to_Income_Ratio: Mengukur rasio antara total pinjaman dengan pendapatan.
+Langkah-langkah yang dilakukan:
 
-Annuity_to_Income_Ratio: Persentase cicilan bulanan yang harus dibayar dari gaji. Ini adalah indikator utama untuk mendeteksi over-indebtedness (kredit berlebih).
+- **Anomaly Detection:** Mengidentifikasi nilai tidak wajar pada variabel `DAYS_EMPLOYED`, termasuk nilai `365243` yang tidak merepresentasikan durasi bekerja secara normal.
+- **Missing Value Handling:** Memeriksa distribusi nilai kosong dan menentukan strategi penanganan yang sesuai.
+- **Categorical Encoding:** Mengubah variabel kategorikal menjadi format yang dapat digunakan oleh algoritma Machine Learning.
+- **Data Quality Checks:** Memeriksa tipe data, distribusi variabel, dan konsistensi data.
 
-Credit_Term: Rasio antara total kredit dan cicilan (Annuity), yang secara efektif merepresentasikan estimasi tenor/lama waktu pinjaman (dalam bulan).
+Anomali pada `DAYS_EMPLOYED` ditangani dengan mengganti nilai khusus tersebut menjadi `NaN` dan membuat fitur indikator `DAYS_EMPLOYED_ANOM` untuk mempertahankan informasi mengenai keberadaan anomali.
 
-Days_Employed_Percent: Proporsi lama bekerja relatif terhadap usia nasabah untuk mengukur stabilitas karier dan kematangan finansial.
+### 3. Feature Engineering
 
-4. Strategi Pemodelan Machine Learning
+*Feature engineering* dilakukan untuk menghasilkan variabel baru yang dapat membantu model mengenali pola risiko kredit.
 
-Baseline vs. Advanced Model: Eksperimen dimulai dengan model sederhana (seperti Logistic Regression) sebagai baseline, lalu dilanjutkan dengan algoritma ansambel berbasis Tree.
+Fitur yang dikembangkan meliputi:
 
-LightGBM (Gradient Boosting): Terpilih sebagai arsitektur final karena efisiensinya dalam memproses jutaan titik data dan penanganan bawaannya terhadap nilai kosong (missing values) secara native.
+| Feature | Description |
+|---|---|
+| `Credit_to_Income_Ratio` | Rasio jumlah pinjaman terhadap pendapatan nasabah. |
+| `Annuity_to_Income_Ratio` | Rasio cicilan tahunan terhadap pendapatan nasabah. |
+| `Credit_Term` | Estimasi durasi pinjaman berdasarkan jumlah kredit dan cicilan. |
+| `Days_Employed_Percent` | Perbandingan durasi bekerja dengan usia nasabah. |
 
-Cross-Validation: Menggunakan Stratified K-Fold Cross Validation (5-fold) untuk memastikan model tidak overfitting dan dapat menggeneralisasi pola pada data yang belum pernah dilihat sebelumnya, sekaligus menjaga proporsi kelas gagal bayar (8.1%) di setiap lipatan data.
+Fitur-fitur tersebut dirancang untuk merepresentasikan beban pinjaman, kemampuan finansial, dan stabilitas pekerjaan nasabah.
 
-5. Evaluasi & Interpretasi Hasil
+### 4. Machine Learning Modeling
 
-ROC-AUC (Receiver Operating Characteristic - Area Under Curve): Model LightGBM mencapai skor ROC-AUC sebesar 0.78. Skor ini sangat solid untuk standar industri pembiayaan konsumen (sebagai perbandingan, tebakan acak adalah 0.50).
+Tahap pemodelan bertujuan untuk mengembangkan model klasifikasi yang mampu membedakan nasabah berdasarkan tingkat risiko gagal bayar.
 
-Analisis Feature Importance: Notebook membuktikan secara visual bahwa ketiga fitur EXT_SOURCE memegang kendali dominan atas keputusan model, disusul oleh metrik rekayasa fitur seperti Credit_Term dan Days_Employed_Percent.
+Pendekatan yang digunakan meliputi:
 
-Trade-off Presisi & Recall: Penjelasan mengenai bagaimana manajemen dapat menggeser threshold model: menaikkan Recall jika sedang fokus menekan NPL (Non-Performing Loan), atau menaikkan Precision jika sedang mengejar pertumbuhan pangsa pasar.
+- **Baseline Model:** Menggunakan Logistic Regression sebagai model pembanding awal.
+- **Tree-Based Models:** Mengevaluasi pendekatan berbasis pohon keputusan untuk menangkap hubungan nonlinier dalam data.
+- **LightGBM:** Menggunakan algoritma *gradient boosting* sebagai model utama karena efisiensi komputasi dan kemampuannya menangani data tabular.
+- **Cross-Validation:** Menggunakan Stratified K-Fold Cross-Validation sebanyak lima fold untuk mengevaluasi konsistensi performa model dengan mempertahankan proporsi kelas pada setiap fold.
 
-💡 Kesimpulan & Tindak Lanjut Bisnis (Business Actionable)
+Penanganan *class imbalance* juga menjadi pertimbangan penting karena jumlah nasabah yang mengalami gagal bayar jauh lebih sedikit dibandingkan nasabah yang tidak mengalami gagal bayar.
 
-Dari seluruh rangkaian analisis yang dijalankan, notebook ini menghasilkan tiga rekomendasi strategis utama untuk operasional bisnis:
+### 5. Model Evaluation
 
-Optimalisasi Pengadaan Data Eksternal: Karena performa model sangat bergantung pada EXT_SOURCE, perusahaan harus memprioritaskan anggaran IT untuk memastikan uptime API dan keandalan integrasi dengan biro data kredit nasional/pihak ketiga.
+Evaluasi model menggunakan metrik yang relevan untuk permasalahan klasifikasi dengan distribusi kelas yang tidak seimbang.
 
-Penerapan Risk-Based Pricing: Output probabilitas dari model ini jangan hanya digunakan untuk keputusan "Tolak/Terima". Probabilitas ini bisa dipetakan untuk menentukan besaran suku bunga dinamis (nasabah berisiko menengah tetap diterima, namun dengan bunga/margin yang sedikit lebih tinggi untuk kompensasi risiko).
+**Primary Metric: ROC-AUC**
 
-Kebijakan Khusus Segmen Usia Muda: Lonjakan risiko pada demografi di bawah 25 tahun mengindikasikan perlunya produk khusus, misalnya mewajibkan penjamin (co-signer / orang tua) atau membatasi plafon pinjaman maksimal (LTV - Loan to Value yang lebih rendah) untuk segmen usia ini.
+Model LightGBM memperoleh skor ROC-AUC sebesar **0.78** berdasarkan hasil evaluasi yang didokumentasikan dalam notebook.
 
-Dokumentasi ini ditulis sebagai representasi alur pemikiran analitis di dalam notebook. Dibuat oleh [Nama Anda] | Portofolio Analisis Data
+ROC-AUC digunakan untuk mengukur kemampuan model dalam membedakan nasabah yang mengalami gagal bayar dan nasabah yang tidak mengalami gagal bayar pada berbagai nilai *classification threshold*.
+
+Metrik evaluasi lainnya yang relevan meliputi:
+
+- **Precision:** Mengukur proporsi prediksi gagal bayar yang benar.
+- **Recall:** Mengukur proporsi kasus gagal bayar aktual yang berhasil diidentifikasi.
+- **F1-Score:** Menggabungkan precision dan recall ke dalam satu metrik.
+- **Confusion Matrix:** Menunjukkan jumlah prediksi benar dan salah pada setiap kelas.
+
+Pemilihan metrik dan *classification threshold* perlu mempertimbangkan konsekuensi bisnis dari kesalahan prediksi, baik berupa risiko menyetujui pinjaman berisiko tinggi maupun risiko menolak nasabah yang sebenarnya layak memperoleh kredit.
+
+### 6. Feature Importance & Interpretation
+
+Analisis *feature importance* dilakukan untuk memahami variabel yang paling banyak berkontribusi terhadap prediksi model.
+
+Berdasarkan hasil analisis yang didokumentasikan, variabel `EXT_SOURCE_1`, `EXT_SOURCE_2`, dan `EXT_SOURCE_3` termasuk fitur penting dalam model, diikuti oleh sejumlah fitur hasil rekayasa seperti `Credit_Term` dan `Days_Employed_Percent`.
+
+Hasil ini menunjukkan bahwa informasi dari sumber penilaian kredit eksternal memiliki keterkaitan yang kuat dengan prediksi risiko gagal bayar dalam dataset.
+
+Namun, *feature importance* tidak secara langsung membuktikan hubungan sebab-akibat. Interpretasi hasil juga perlu mempertimbangkan kualitas data, potensi bias, dan karakteristik populasi yang digunakan.
+
+## 💡 Business Insights & Recommendations
+
+Berdasarkan hasil analisis, berikut beberapa rekomendasi yang dapat dipertimbangkan oleh tim manajemen risiko kredit.
+
+### 1. Evaluasi Kualitas Data Kredit Eksternal
+
+Variabel `EXT_SOURCE` memiliki peran penting dalam prediksi model. Oleh karena itu, perusahaan dapat mengevaluasi kelengkapan, kualitas, dan konsistensi data dari sumber eksternal untuk mendukung penilaian risiko kredit yang lebih baik.
+
+### 2. Risk-Based Credit Assessment
+
+Probabilitas gagal bayar dapat dipertimbangkan sebagai salah satu masukan dalam proses penilaian risiko kredit. Hasil prediksi dapat digunakan bersama informasi finansial lainnya untuk membantu menentukan tingkat risiko, kebutuhan pemeriksaan tambahan, atau persyaratan kredit yang sesuai.
+
+### 3. Evaluasi Risiko pada Segmen Nasabah
+
+Perbedaan tingkat gagal bayar antarsegmen demografi dapat menjadi dasar untuk melakukan analisis lanjutan. Namun, kebijakan kredit tidak sebaiknya ditentukan hanya berdasarkan usia, gender, atau karakteristik demografi lainnya.
+
+Penilaian harus mempertimbangkan kemampuan membayar, relevansi variabel terhadap risiko, keadilan keputusan, serta ketentuan regulasi yang berlaku.
+
+### 4. Optimasi Classification Threshold
+
+Tim manajemen risiko dapat mengevaluasi berbagai nilai *classification threshold* untuk memahami trade-off antara precision dan recall.
+
+Pemilihan threshold sebaiknya mempertimbangkan biaya kesalahan prediksi, potensi kerugian kredit, dan tujuan bisnis, bukan hanya mengejar satu metrik evaluasi.
+
+## 🛠️ Tools & Technologies
+
+- **Python** — Data analysis and model development
+- **Pandas & NumPy** — Data manipulation and numerical computation
+- **Matplotlib & Seaborn** — Exploratory data analysis and visualization
+- **Scikit-learn** — Preprocessing, baseline modeling, and model evaluation
+- **LightGBM** — Gradient boosting classification
+- **Jupyter Notebook** — Interactive analysis and documentation
+
+## 📁 Repository Structure
+
+```text
+home-credit-default-risk/
+│
+├── notebooks/
+│   └── home_credit_analysis.ipynb
+│
+├── README.md
+│
+└── requirements.txt
+```
+
+*Catatan: Struktur direktori di atas merupakan contoh. Sesuaikan nama folder dan file dengan struktur repositori yang sebenarnya.*
+
+## 📊 Key Results
+
+| Evaluation Component | Result |
+|---|---|
+| Problem Type | Binary Classification |
+| Primary Metric | ROC-AUC |
+| Main Model | LightGBM |
+| ROC-AUC Score | 0.78 |
+| Cross-Validation | Stratified 5-Fold |
+
+*Hasil evaluasi di atas mengikuti skor yang dicatat dalam notebook. Pastikan nilai tersebut berasal dari evaluasi pada data validasi atau pengujian yang sesuai sebelum dipublikasikan.*
+
+## ⚠️ Limitations
+
+- Hasil model bergantung pada kualitas, kelengkapan, dan representativitas dataset.
+- Ketidakseimbangan kelas dapat memengaruhi evaluasi dan keputusan klasifikasi.
+- Feature importance tidak menunjukkan hubungan sebab-akibat.
+- Hasil eksperimen pada dataset historis belum menjamin performa yang sama pada data nasabah baru.
+- Model ini merupakan proyek analisis dan eksperimen, bukan sistem penilaian kredit siap produksi.
+
